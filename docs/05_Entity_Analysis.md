@@ -150,6 +150,8 @@ This document identifies every entity required by the Personal Finance Managemen
 |---|---|---|---|---|
 | TransactionTypeID | INT | No | PK | Unique identifier |
 | TransactionTypeName | VARCHAR(10) | No | Unique | 'Income' or 'Expense' |
+| Description | VARCHAR(255) | Yes | | Optional explanation |
+| IsActive | BIT | No | | Allows retiring a type without deleting historical references |
 
 **Note:** This lookup exists purely so `Transaction` follows the same normalized pattern as `AccountType`/`PaymentMethod`, rather than storing `TransactionType` as free text. It will contain the same two values as `CategoryType` (§2.6) — the two tables aren't merged because a transaction's type and a category's type are conceptually independent fields, even though they must always agree in practice (BR-023). If this duplication bothers you, the two lookups could be merged into one shared table later; flagging it here as an option rather than doing it silently.
 
