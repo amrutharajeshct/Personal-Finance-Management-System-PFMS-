@@ -2,231 +2,122 @@
 
 ## Introduction
 
-This document defines the business rules that govern the Personal Finance Management System. These rules ensure data consistency, integrity, and accurate financial reporting.
+This document defines the business rules that govern the Personal Finance Management System (PFMS). These rules ensure data consistency, integrity, and accurate financial reporting.
 
 ---
 
-# User Rules
+## User Rules
 
-BR-001
+**BR-001** — The system shall support one active user in Version 1.
 
-The system shall support one active user in Version 1.
-
-BR-002
-
-Each user shall have a unique login account.
+**BR-002** — Each user shall have a unique login account.
 
 ---
 
-# Account Rules
+## Account Rules
 
-BR-003
+**BR-003** — Each account shall have a unique name.
+*Examples: Federal Bank, SBI Bank, Punjab National Bank, Cash*
 
-Each account shall have a unique name.
+**BR-004** — Accounts shall use soft deletion via an `IsActive` flag. Hard deletion of an account with existing transactions is not allowed.
 
-Examples
+**BR-005** — An inactive account cannot be used for new transactions.
 
-- Federal Bank
-- SBI Bank
-- Punjab National Bank
-- Cash
+**BR-006** — Every transaction must be associated with a valid account (`AccountID` is `NOT NULL`). If the account is unknown, a predefined account such as **Cash** or **Unassigned** shall be used.
 
-BR-004
-
-An account cannot be deleted if transactions exist.
-
-BR-005
-
-An inactive account cannot be used for new transactions.
+**BR-007** — Accounts may optionally have an `AccountType` (e.g., Bank, Cash, Savings, Wallet) to support dedicated savings accounts in the future.
 
 ---
 
-# Income Rules
+## Category Rules
 
-BR-006
+**BR-008** — Every category shall belong to exactly one type: **Income** or **Expense**.
 
-Every income transaction must belong to one income category.
+**BR-009** — Category names must be unique within their type.
+*Example: "Food" (Expense) and "Salary" (Income) can coexist, but two Expense categories cannot both be named "Food."*
 
-BR-007
+**BR-010** — Categories with existing transactions cannot be deleted.
 
-Income amount must be greater than zero.
+**BR-011** — Categories shall support one level of hierarchy via `ParentCategoryID`.
+*Example: Food → Tea, Lunch, Dinner*
 
-BR-008
-
-Income date is mandatory.
-
----
-
-# Expense Rules
-
-BR-009
-
-Every expense shall belong to one expense category.
-
-BR-010
-
-Expense amount must be greater than zero.
-
-BR-011
-
-Expense date is mandatory.
-
-BR-012
-
-Every expense must be associated with one account.
+**BR-012** — A child category shall belong to the same category type (Income/Expense) as its parent.
 
 ---
 
-# Category Rules
+## Transaction Rules
 
-BR-013
+**BR-013** — Each transaction shall belong to exactly one account.
 
-Every category shall belong to either:
+**BR-014** — Each transaction shall belong to exactly one category, matching the transaction's type (income transactions → income categories; expense transactions → expense categories).
 
-- Income
-- Expense
+**BR-015** — Transaction amount must be positive (greater than zero). Negative amounts are not allowed.
 
-BR-014
+**BR-016** — Transaction date is mandatory.
 
-Category names must be unique within their type.
-
-Example
-
-Food (Expense)
-
-Salary (Income)
-
-BR-015
-
-Categories with existing transactions cannot be deleted.
+**BR-017** — Transaction description is optional.
 
 ---
 
-# Transaction Rules
+## Account Transfer Rules
 
-BR-016
+**BR-018** — Transfers shall occur between two valid accounts belonging to the same user.
 
-Each transaction shall belong to exactly one account.
+**BR-019** — The source and destination accounts must be different.
 
-BR-017
+**BR-020** — The transfer amount must be greater than zero.
 
-Each transaction shall belong to exactly one category.
+**BR-021** — Transfers shall be stored in a separate `AccountTransfers` table (not in `Transactions`), containing:
+- `FromAccountID`
+- `ToAccountID`
+- `TransferDate`
+- `Amount`
+- `Description` (optional)
 
-BR-018
+**BR-022** — Transfers shall update the balances of both accounts: decreasing the source account and increasing the destination account.
 
-Transaction amount must be positive.
-
-BR-019
-
-Transaction date cannot be empty.
-
-BR-020
-
-Transaction description is optional.
+**BR-023** — Transfers shall not be included in income reports, expense reports, or savings calculations.
 
 ---
 
-# Account Transfer Rules
+## Payment Method Rules
 
-BR-021
-
-Transfers shall occur between two valid accounts.
-
-BR-022
-
-Transfers shall not be included in income reports.
-
-BR-023
-
-Transfers shall not be included in expense reports.
-
-BR-024
-
-Transfers shall update the balances of both accounts.
+**BR-024** — Supported payment methods: Cash, UPI, Debit Card, Bank Transfer.
+*Future: Credit Card.*
 
 ---
 
-# Payment Method Rules
+## Reporting Rules
 
-BR-025
+**BR-025** — Monthly income reports shall include only income transactions.
 
-Supported payment methods:
+**BR-026** — Monthly expense reports shall include only expense transactions.
 
-- Cash
-- UPI
-- Debit Card
-- Bank Transfer
+**BR-027** — Category-wise reports shall group transactions by category.
 
-Future
+**BR-028** — Daily reports shall display transactions for the selected date.
 
-- Credit Card
-
----
-
-# Reporting Rules
-
-BR-026
-
-Monthly income shall include only income transactions.
-
-BR-027
-
-Monthly expense shall include only expense transactions.
-
-BR-028
-
-Savings shall be calculated as:
-
-Savings = Total Income − Total Expenses
-
-BR-029
-
-Category-wise reports shall group transactions by category.
-
-BR-030
-
-Daily reports shall display transactions for the selected date.
+**BR-029** — Savings shall be calculated as:
+**Savings = Total Income − Total Expenses**
+Savings shall not be stored as a separate ledger; it shall always be derived/computed.
 
 ---
 
-# Data Integrity Rules
+## Data Integrity Rules
 
-BR-031
+**BR-030** — Primary keys shall uniquely identify each record.
 
-Primary keys shall uniquely identify each record.
+**BR-031** — Foreign key relationships shall maintain referential integrity.
 
-BR-032
+**BR-032** — Duplicate transactions should be avoided where possible.
 
-Foreign key relationships shall maintain referential integrity.
+**BR-033** — All monetary values shall use the `DECIMAL` data type.
 
-BR-033
-
-Duplicate transactions should be avoided where possible.
-
-BR-034
-
-All monetary values shall be stored using DECIMAL data type.
+**BR-034** — Financial records shall not be permanently deleted; soft deletion (`IsActive` / status flags) shall be used throughout.
 
 ---
 
-BR-035
-
-The source and destination accounts must be different.
-
-BR-036
-
-The transfer amount must be greater than zero.
-
-BR-037
-
-A transfer does not affect total income or total expenses.
-
-BR-038
-
-A transfer decreases the balance of the source account and increases the balance of the destination account.
-
-
-# Future Business Rules
+## Future Business Rules
 
 - Budget validation
 - EMI reminders
