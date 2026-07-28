@@ -81,7 +81,7 @@ The following features are planned for future versions:
 
 # Target Users
 
-The first version of the system is designed for a single user to manage personal finances. However, the database architecture will be designed to support multiple users in future releases with minimal structural changes.
+The first version of the system is designed for a single user to manage personal finances. However, the database architecture will be designed to support multiple users in future releases with minimal structural changes (see Business Rules, BR-009: `UserID` foreign key on Accounts).
 
 ---
 
@@ -114,7 +114,7 @@ Using this system, users will be able to:
 
 # Project Status
 
-**Current Phase:** Requirement Analysis
+**Current Phase:** Database Design (Requirements Analysis complete)
 
 ### Completed
 
@@ -122,15 +122,14 @@ Using this system, users will be able to:
 - Project scope defined
 - GitHub repository created
 - Repository structure created
-- Initial documentation started
+- Requirements Specification documented
+- Business Rules documented
 
 ### Upcoming
 
-- Requirements Specification
-- Business Rules
 - System Workflow
 - ER Diagram
-- Database Design
+- Database Design (entity identification, normalization, relationships)
 - SQL Development
 - Frontend Development
 - Reporting Dashboard
@@ -143,7 +142,7 @@ The long-term vision of this project is to develop a complete Personal Finance M
 
 ---
 
-**Author:** Amrutha CT  
-**Project:** Personal Finance Management System (PFMS)  
-**Version:** 1.0  
+**Author:** Amrutha CT
+**Project:** Personal Finance Management System (PFMS)
+**Version:** 1.0
 **Status:** In Development
