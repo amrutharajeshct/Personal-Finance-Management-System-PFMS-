@@ -144,7 +144,7 @@ Personal-Finance-Management-System
 
 * [x] Define project scope
 * [x] Identify user requirements
-* [ ] Finalize business rules
+* [x] Finalize business rules
 
 ### Phase 2 — Database Design
 
