@@ -184,7 +184,8 @@ Analysis Reports
 ## Security
 
 - Data should be accessible only to authorized users.
-- Passwords should be securely stored (future enhancement).
+- If a login/authentication layer is implemented, passwords shall be stored using secure hashing, never in plain text (see Business Rules, BR-003).
+- Version 1, which has no application-level login screen, relies on direct single-user access to the database/application; this rule takes effect once authentication is introduced.
 
 ## Scalability
 
