@@ -148,7 +148,7 @@ Personal-Finance-Management-System
 
 ### Phase 2 — Database Design
 
-* [ ] Identify entities
+* [x] Identify entities
 * [ ] Design ER diagram
 * [ ] Normalize database
 * [ ] Define relationships
