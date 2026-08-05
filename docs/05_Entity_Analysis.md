@@ -71,6 +71,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | AccountTypeName | VARCHAR(50) | No | Unique | Bank / Cash / Wallet / Savings (BR-013) |
 | Description | VARCHAR(255) | Yes | | Optional explanation |
 | IsActive | BIT | No | | Allows retiring a type without deleting historical references |
+| UpdatedAt | DATETIME | Yes | | Audit column |
 
 ---
 
@@ -82,6 +83,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | CurrencyCode | VARCHAR(3) | No | Unique | e.g., "INR" |
 | CurrencyName | VARCHAR(50) | No | | e.g., "Indian Rupee" |
 | Symbol | VARCHAR(5) | No | | e.g., "₹" |
+| UpdatedAt | DATETIME | Yes | | Audit column |
 
 **Note:** Version 1 will seed a single row (INR) and every `Account` will default to it, per the Requirements Specification's single-currency assumption. Adding this now avoids a schema change if multi-currency support is ever needed.
 
@@ -104,6 +106,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | CreatedAt | DATETIME | No | | Audit column |
 | UpdatedAt | DATETIME | Yes | | Audit column |
 
+
 **Note:** No hard delete permitted once transactions exist (BR-010). A default "Cash" or "Unassigned" row must exist to satisfy BR-012. `CurrentBalance` is intentionally **not** stored — it's calculated as `OpeningBalance + Income − Expense + Incoming Transfers − Outgoing Transfers` via a view/query, avoiding a column that could drift out of sync with the underlying transactions.
 
 ---
@@ -114,6 +117,7 @@ This document identifies every entity required by the Personal Finance Managemen
 |---|---|---|---|---|
 | CategoryTypeID | INT | No | PK | Unique identifier |
 | CategoryTypeName | VARCHAR(10) | No | Unique | 'Income' or 'Expense' |
+| UpdatedAt | DATETIME | Yes | | Audit column |
 
 ---
 
@@ -141,6 +145,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | PaymentMethodName | VARCHAR(50) | No | Unique | Cash / UPI / Debit Card / Bank Transfer (BR-021) |
 | Description | VARCHAR(255) | Yes | | Optional explanation |
 | IsActive | BIT | No | | Allows retiring a method without deleting historical references |
+| UpdatedAt | DATETIME | Yes | | Audit column |
 
 ---
 
@@ -152,6 +157,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | TransactionTypeName | VARCHAR(10) | No | Unique | 'Income' or 'Expense' |
 | Description | VARCHAR(255) | Yes | | Optional explanation |
 | IsActive | BIT | No | | Allows retiring a type without deleting historical references |
+| UpdatedAt | DATETIME | Yes | | Audit column |
 
 **Note:** This lookup exists purely so `Transaction` follows the same normalized pattern as `AccountType`/`PaymentMethod`, rather than storing `TransactionType` as free text. It will contain the same two values as `CategoryType` (§2.6) — the two tables aren't merged because a transaction's type and a category's type are conceptually independent fields, even though they must always agree in practice (BR-023). If this duplication bothers you, the two lookups could be merged into one shared table later; flagging it here as an option rather than doing it silently.
 
@@ -163,6 +169,7 @@ This document identifies every entity required by the Personal Finance Managemen
 |---|---|---|---|---|
 | TransactionSourceID | INT | No | PK | Unique identifier |
 | TransactionSourceName | VARCHAR(50) | No | Unique | Manual / Import / Recurring |
+| UpdatedAt | DATETIME | Yes | | Audit column |
 
 **Note:** Every V1 record will use "Manual." Having this lookup now means future import or recurring-transaction features won't require a schema change — just new rows and application logic.
 
@@ -223,6 +230,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | TransactionSource | Transaction | 1 : Many | Every transaction has one source |
 | Account | AccountTransfer (as From) | 1 : Many | |
 | Account | AccountTransfer (as To) | 1 : Many | Two separate FKs to the same `Account` table |
+| UpdatedAt | DATETIME | Yes | | Audit column |
 
 ---
 
