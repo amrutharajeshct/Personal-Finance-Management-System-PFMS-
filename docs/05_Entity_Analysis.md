@@ -58,6 +58,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | Email | VARCHAR(150) | Yes | Unique | Optional (BR-008) |
 | CreatedAt | DATETIME | No | | Audit column |
 | UpdatedAt | DATETIME | Yes | | Audit column |
+| IsActive | BIT | No | | Supports future multi-user deactivation |
 
 **Note:** `UserID` is both the primary key and the foreign key — a true 1:1 extension table.
 
@@ -72,6 +73,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | Description | VARCHAR(255) | Yes | | Optional explanation |
 | IsActive | BIT | No | | Allows retiring a type without deleting historical references |
 | UpdatedAt | DATETIME | Yes | | Audit column |
+| IsActive | BIT | No | | Supports future multi-user deactivation |
 
 ---
 
@@ -84,6 +86,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | CurrencyName | VARCHAR(50) | No | | e.g., "Indian Rupee" |
 | Symbol | VARCHAR(5) | No | | e.g., "₹" |
 | UpdatedAt | DATETIME | Yes | | Audit column |
+| IsActive | BIT | No | | Supports future multi-user deactivation |
 
 **Note:** Version 1 will seed a single row (INR) and every `Account` will default to it, per the Requirements Specification's single-currency assumption. Adding this now avoids a schema change if multi-currency support is ever needed.
 
@@ -118,6 +121,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | CategoryTypeID | INT | No | PK | Unique identifier |
 | CategoryTypeName | VARCHAR(10) | No | Unique | 'Income' or 'Expense' |
 | UpdatedAt | DATETIME | Yes | | Audit column |
+| IsActive | BIT | No | | Supports future multi-user deactivation |
 
 ---
 
@@ -170,6 +174,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | TransactionSourceID | INT | No | PK | Unique identifier |
 | TransactionSourceName | VARCHAR(50) | No | Unique | Manual / Import / Recurring |
 | UpdatedAt | DATETIME | Yes | | Audit column |
+| IsActive | BIT | No | | Supports future multi-user deactivation |
 
 **Note:** Every V1 record will use "Manual." Having this lookup now means future import or recurring-transaction features won't require a schema change — just new rows and application logic.
 
@@ -190,6 +195,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | Description | VARCHAR(255) | Yes | | Optional (BR-026) |
 | CreatedAt | DATETIME | No | | Audit column |
 | UpdatedAt | DATETIME | Yes | | Audit column |
+| IsActive | BIT | No | | Supports future multi-user deactivation |
 
 **Note:** A trigger enforces that `TransactionTypeID`'s name matches the linked `Category`'s `CategoryTypeID` name (BR-023) — the comparison is done by name since `TransactionType` and `CategoryType` are independent lookup tables with their own surrogate keys.
 
@@ -207,6 +213,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | Description | VARCHAR(255) | Yes | | Optional |
 | CreatedAt | DATETIME | No | | Audit column |
 | UpdatedAt | DATETIME | Yes | | Audit column |
+| IsActive | BIT | No | | Supports future multi-user deactivation |
 
 **Note:** Kept fully separate from `Transaction` so transfers never leak into income/expense reports (BR-033).
 
@@ -230,7 +237,8 @@ This document identifies every entity required by the Personal Finance Managemen
 | TransactionSource | Transaction | 1 : Many | Every transaction has one source |
 | Account | AccountTransfer (as From) | 1 : Many | |
 | Account | AccountTransfer (as To) | 1 : Many | Two separate FKs to the same `Account` table |
-| UpdatedAt | DATETIME | Yes | | Audit column |
+
+
 
 ---
 
