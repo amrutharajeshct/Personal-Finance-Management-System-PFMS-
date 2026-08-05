@@ -55,3 +55,21 @@ CREATE TABLE Account(
     FOREIGN KEY(AccountTypeID) REFERENCES AccountType(AccountTypeID),
 	FOREIGN KEY(CurrencyID) REFERENCES Currency(CurrencyID)
 );
+
+CREATE TABLE CategoryType(
+	CategoryTypeID INT IDENTITY(1,1) PRIMARY KEY,
+	CategoryTypeName VARCHAR(10) UNIQUE,
+	UpdatedAt DATETIME,
+	IsActive BIT DEFAULT 1	
+);
+
+CREATE TABLE  Category(
+CategoryID	INT	IDENTITY(1,1) PRIMARY KEY,
+CategoryName VARCHAR(100) UNIQUE,
+CategoryTypeID INT,
+ParentCategoryID INT,
+IsActive BIT DEFAULT 1,
+CreatedAt DATETIME,
+UpdatedAt DATETIME,
+FOREIGN KEY(CategoryTypeID) REFERENCES CategoryType(CategoryTypeID)	
+);
