@@ -1,0 +1,33 @@
+CREATE OR ALTER PROCEDURE SP_Login
+  @UserID INT,
+  @PasswordHash VARCHAR(256)
+
+AS
+BEGIN
+  SET NOCOUNT ON;
+  BEGIN TRY
+    -- CHECKS THE USER IS EXISTS OR NOT
+    IF NOT EXISTS(SELECT 1 FROM Users WHERE UserID=@UserID)
+      BEGIN
+        SELECT 0 AS StatusCode, 'USER NOT EXISTS' AS MESSAGE;
+        RETURN;
+      END
+    -- USERNAME AND PASSWORD CHECKING
+    IF EXISTS(SELECT 1 FROM Users WHERE UserID=@UserID AND PasswordHash=@PasswordHash AND IsActive=1)
+      BEGIN
+        SELECT 1 AS StatusCode, 'LOGIN SUCCESSFULLY' AS MESSAGE;
+      END
+    ELSE 
+      BEGIN
+        SELECT 0 AS StatusCode, 'INCORRECT USERNAME OR PASSWORD' AS MESSAGE;
+      END
+        
+  END TRY
+  BEGIN CATCH
+    SELECT
+      ERROR_NUMBER() AS ErrorNumber,
+      ERROR_MESSAGE() AS ErrorMessage,
+      ERROR_LINE() AS ErrorLine,
+      ERROR_PROCEDURE() AS ErrorProcedure;
+  END CATCH
+END
