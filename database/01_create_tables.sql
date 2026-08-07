@@ -3,6 +3,7 @@ CREATE TABLE Users(
     UserName VARCHAR(100) UNIQUE,
     PasswordHash VARCHAR(256),
     IsActive BIT DEFAULT 1,
+	LastLogin DATETIME,
     CreatedAt DATETIME,
     UpdatedAt DATETIME
 );
