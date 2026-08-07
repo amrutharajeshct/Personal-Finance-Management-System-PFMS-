@@ -1,0 +1,9 @@
+<!--
+  Add this inside the <configuration> node of your Web.config.
+  Update Server/Database/User Id/Password to match your environment.
+-->
+<connectionStrings>
+  <add name="AppDb"
+       connectionString="Server=YOUR_SERVER;Database=YOUR_DB;User Id=YOUR_USER;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+       providerName="System.Data.SqlClient" />
+</connectionStrings>
