@@ -51,7 +51,7 @@ CREATE TABLE Account(
     BankName VARCHAR(100),
     IsActive BIT DEFAULT 1,
     CreatedAt DATETIME,
-    UpdatedAt DATETIME,,
+    UpdatedAt DATETIME,
     FOREIGN KEY(UserID) REFERENCES Users(UserID),
     FOREIGN KEY(AccountTypeID) REFERENCES AccountType(AccountTypeID),
 	FOREIGN KEY(CurrencyID) REFERENCES Currency(CurrencyID)
@@ -98,7 +98,7 @@ CREATE TABLE TransactionSource(
 	UpdatedAt DATETIME DEFAULT GETDATE()
 );
 
-CREATE TABLE Transaction(
+CREATE TABLE Transactions(
 	TransactionID INT IDENTITY(1,1) PRIMARY KEY,
 	AccountID INT,
 	CategoryID INT,
