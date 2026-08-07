@@ -73,3 +73,79 @@ CreatedAt DATETIME,
 UpdatedAt DATETIME,
 FOREIGN KEY(CategoryTypeID) REFERENCES CategoryType(CategoryTypeID)	
 );
+
+CREATE TABLE PaymentMethod(
+	PaymentMethodID	INT	IDENTITY(1,1) PRIMARY KEY,
+	PaymentMethodName VARCHAR(50) UNIQUE,
+	Description	VARCHAR(255),
+	IsActive BIT DEFAULT 1,
+	UpdatedAt DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE TransactionType(
+	TransactionTypeID INT IDENTITY(1,1) PRIMARY KEY,
+	TransactionTypeName	VARCHAR(10)	UNIQUE,
+	Description	VARCHAR(255),
+	IsActive BIT DEFAULT 1,
+	UpdatedAt DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE TransactionSource(
+	TransactionSourceID	INT	IDENTITY(1,1) PRIMARY KEY,
+	TransactionSourceName VARCHAR(50) UNIQUE,
+	IsActive BIT DEFAULT 1,
+	UpdatedAt DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE Transaction(
+	TransactionID INT IDENTITY(1,1) PRIMARY KEY,
+	AccountID INT,
+	CategoryID INT,
+	PaymentMethodID	INT,
+	TransactionTypeID INT,
+	TransactionSourceID	INT,
+	Amount DECIMAL(18,2),
+	TransactionDate	DATE,
+	Description	VARCHAR(255),
+	CreatedAt DATETIME,
+	IsActive BIT DEFAULT 1,
+	UpdatedAt DATETIME DEFAULT GETDATE(),
+	FOREIGN KEY (AccountID)	REFERENCES Account(AccountID),
+	FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID),
+	FOREIGN KEY (PaymentMethodID) REFERENCES PaymentMethod(PaymentMethodID),
+	FOREIGN KEY (TransactionTypeID)	REFERENCES TransactionType(TransactionTypeID),
+	FOREIGN KEY (TransactionSourceID)	REFERENCES TransactionSource(TransactionSourceID)
+);
+
+CREATE TABLE AccountTransfer(
+	TransferID INT IDENTITY(1,1) PRIMARY KEY,
+	FromAccountID INT,
+	ToAccountID	INT,
+	TransferDate DATE,		
+	Amount DECIMAL(18,2),
+	Description	VARCHAR(255),
+	CreatedAt DATETIME,
+	UpdatedAt DATETIME DEFAULT GETDATE(),
+	IsActive BIT DEFAULT 1,
+	FOREIGN KEY (FromAccountID)	REFERENCES Account(AccountID),
+	FOREIGN KEY (ToAccountID)	REFERENCES Account(AccountID)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
