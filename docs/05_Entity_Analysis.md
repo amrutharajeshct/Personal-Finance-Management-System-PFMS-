@@ -39,6 +39,7 @@ This document identifies every entity required by the Personal Finance Managemen
 | UserName | VARCHAR(100) | No | Unique | Login name (BR-002) |
 | PasswordHash | VARCHAR(256) | Yes | | Populated once authentication is introduced (BR-003) |
 | IsActive | BIT | No | | Supports future multi-user deactivation |
+| LastLogin | DATETIME | Yes | | Audit column |
 | CreatedAt | DATETIME | No | | Audit column |
 | UpdatedAt | DATETIME | Yes | | Audit column |
 
