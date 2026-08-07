@@ -1,10 +1,10 @@
 CREATE TABLE Users(
     UserID INT IDENTITY(1,1) PRIMARY KEY,
-    UserName VARCHAR(100) UNIQUE,
+    UserName VARCHAR(100) UNIQUE  NOT NULL,
     PasswordHash VARCHAR(256),
-    IsActive BIT DEFAULT 1,
-	LastLogin DATETIME,
-    CreatedAt DATETIME,
+    IsActive BIT DEFAULT 1  NOT NULL,
+	LastLogin DATETIME ,
+    CreatedAt DATETIME  NOT NULL,
     UpdatedAt DATETIME
 );
 
@@ -13,7 +13,7 @@ CREATE TABLE UsersDetails (
     FullName VARCHAR(150) NOT NULL,
     MobileNumber VARCHAR(15) UNIQUE NOT NULL,
     Address	VARCHAR(255),
-    IsSalaried BIT,
+    IsSalaried BIT ,
     Email VARCHAR(150) UNIQUE,
     CreatedAt DATETIME DEFAULT GETDATE(),
     UpdatedAt DATETIME DEFAULT GETDATE(),
@@ -32,7 +32,7 @@ CREATE TABLE AccountType(
 
 CREATE TABLE Currency(
     CurrencyID INT IDENTITY(1,1) PRIMARY KEY,
-    CurrencyCode VARCHAR(3) UNIQUE,
+    CurrencyCode VARCHAR(3) UNIQUE  NOT NULL,
     CurrencyName VARCHAR(50) NOT NULL,
     Symbol VARCHAR(5) ,
 	  CreatedAt DATETIME DEFAULT GETDATE(),
