@@ -16,6 +16,7 @@ BEGIN
     IF EXISTS(SELECT 1 FROM Users WHERE UserID=@UserID AND PasswordHash=@PasswordHash AND IsActive=1)
       BEGIN
         SELECT 1 AS StatusCode, 'LOGIN SUCCESSFULLY' AS MESSAGE;
+        UPDATE Users SET LastLogin=GETDATE() WHERE UserID=@UserID 
       END
     ELSE 
       BEGIN
