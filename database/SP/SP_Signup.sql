@@ -1,4 +1,5 @@
 CREATE OR ALTER PROCEDURE SP_Signup(
+  @Mode INT,
   @FullName	VARCHAR(150),
   @MobileNumber	VARCHAR(15),
   @Address	VARCHAR(255),
@@ -12,7 +13,7 @@ BEGIN
   SET NOCOUNT ON;
   DECLARE @UserID INT;
   BEGIN TRY
-    IF  @FullName IS NULL OR @UserName IS NULL   -- VALIDATING MANDATORY FIELDS
+    IF  @FullName IS NULL OR @UserName IS NULL OR @MobileNumber IS NULL OR  -- VALIDATING MANDATORY FIELDS
         BEGIN
         SELECT 0 AS StatusCode,
         'PROVIDE ALL REQUIRED DETAILS' AS Message;
@@ -20,7 +21,8 @@ BEGIN
             ROLLBACK TRANSACTION;
         RETURN;
         END
-
+IF @Mode=1
+  BEGIN
       -- USER CHECKING
     IF EXISTS (SELECT 1 FROM UserDetails WHERE FullName=@FullName AND MobileNumber=@MobileNumber AND Email=@Email)
       BEGIN
@@ -38,11 +40,8 @@ BEGIN
           'USERNAME ALREADY EXISTS' AS Message;
         RETURN;
       END
-
         
     BEGIN TRANSACTION
-
-
             INSERT INTO UserDetails(
               FullName,
               MobileNumber,
@@ -74,7 +73,18 @@ BEGIN
           SELECT
             1 AS StatusCode,
             'USER REGISTERED SUCCESSFULLY' AS Message;
+END 
+IF @Mode=2
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM Users WHERE UserName=@UserName)
+      BEGIN
+        SELECT
+          0 AS StatusCode,
+          'USERNAME NOT EXISTS' AS Message;
+        RETURN;
+      END
 
+END
         
   END TRY
   BEGIN CATCH
