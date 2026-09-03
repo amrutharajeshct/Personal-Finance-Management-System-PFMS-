@@ -1,4 +1,5 @@
 CREATE OR ALTER PROCEDURE SP_AccountInsertUpdate
+    @mode            INT,
     @UserID          INT,
     @AccountName     VARCHAR(100),
     @AccountTypeID   INT,
@@ -20,7 +21,8 @@ BEGIN
         SELECT 0 AS StatusCode, 'PROVIDE ALL REQUIRED DETAILS' AS Message;
         RETURN;
     END
- 
+IF @mode=1
+BEGIN
     -- Default CurrencyID to INR if not supplied (BR: defaults to INR in V1)
     IF @CurrencyID IS NULL
     BEGIN
@@ -79,8 +81,35 @@ BEGIN
         );
  
         COMMIT TRANSACTION;
- 
         SELECT 1 AS StatusCode, 'DATA INSERTED SUCCESSFULLY' AS Message;
+END
+ELSEIF @mode=2
+BEGIN 
+    -- AccountName must be unique (per BR-009)
+        IF NOT EXISTS (SELECT 1 FROM Account WHERE AccountName = @AccountName)
+        BEGIN
+            SELECT 0 AS StatusCode, 'ACCOUNT NAME NOT EXISTS' AS Message;
+            RETURN;
+        END
+        ELSE 
+            BEGIN
+                UPDATE Account
+                SET AccountName = COALESCE(@AccountName, AccountName),
+                    AccountTypeID = COALESCE(@AccountTypeID, AccountTypeID),
+                    CurrencyID = COALESCE(@CurrencyID, CurrencyID),
+                    OpeningBalance = COALESCE(@OpeningBalance, OpeningBalance),
+                    AccountNumber = COALESCE(@AccountNumber, AccountNumber),
+                    IFSCCode = COALESCE(@IFSCCode, IFSCCode),
+                    BankName = COALESCE(@BankName, BankName),
+                    IsActive = COALESCE(@IsActive, IsActive),
+                    UpdatedAt = GETDATE()
+                WHERE AccountName = @AccountName
+            END
+END
+
+
+    
+        
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
