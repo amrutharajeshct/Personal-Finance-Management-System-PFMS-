@@ -49,7 +49,8 @@ IF @Mode=1
               Email,
               CreatedAt          
             )
-            VALUES(@FullName,
+            VALUES(
+              @FullName,
               @MobileNumber,
               @Address,
               @Email,
@@ -83,7 +84,26 @@ BEGIN
           'USERNAME NOT EXISTS' AS Message;
         RETURN;
       END
-
+  ELSE
+        BEGIN
+          BEGIN TRANSACTION
+            UPDATE UserDetails
+            SET  FullName=@FullName,
+                MobileNumber=@MobileNumber,
+                Address=@Address,
+                Email=@Email,
+            WHERE UserName=@UserName;
+            
+            UPDATE Users
+              SET UserName=@UserName,
+                  PasswordHash=@PasswordHash
+              WHERE UserName=@UserName;
+        
+          COMMIT TRANSACTION
+          SELECT
+            1 AS StatusCode,
+            'USER DATA UPDATED SUCCESSFULLY' AS Message;
+        END
 END
         
   END TRY
