@@ -1,9 +1,34 @@
-<!--
-  Add this inside the <configuration> node of your Web.config.
-  Update Server/Database/User Id/Password to match your environment.
--->
-<connectionStrings>
-  <add name="AppDb"
-       connectionString="Server=YOUR_SERVER;Database=YOUR_DB;User Id=YOUR_USER;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
-       providerName="System.Data.SqlClient" />
-</connectionStrings>
+<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+
+  <!-- Database Connection -->
+  <connectionStrings>
+    <add name="PFMSConnection"
+         connectionString="Data Source=YOUR_SERVER_NAME;
+                           Initial Catalog=PFMS;
+                           Integrated Security=True;"
+         providerName="System.Data.SqlClient" />
+  </connectionStrings>
+
+
+  <!-- ASP.NET Configuration -->
+  <system.web>
+
+    <compilation debug="true" targetFramework="4.8" />
+
+    <httpRuntime targetFramework="4.8" />
+
+  </system.web>
+
+
+  <!-- IIS Configuration -->
+  <system.webServer>
+
+    <handlers>
+      <remove name="WebServiceHandlerFactory-Integrated" />
+    </handlers>
+
+  </system.webServer>
+
+</configuration>
